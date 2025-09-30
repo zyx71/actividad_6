@@ -4,6 +4,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/create', [TestController::class, 'create']);
+Route::get('/getAll', [TestController::class, 'getAll']);
+Route::get('/getOne/{id}', [TestController::class, 'getOne']);
+Route::get('/update/{id}', [TestController::class, 'update']);
+Route::get('/delete/{id}', [TestController::class, 'delete']);
+
 Route::get('/', function () {
     return view('welcome');
 });
