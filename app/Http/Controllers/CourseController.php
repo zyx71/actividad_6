@@ -29,21 +29,39 @@ class CourseController extends Controller
         return view('courses.create', compact('kits'));
     }
 
-    /**
+    /** 
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        // Validar primero (para evitar subir archivos inválidos)
         $request->validate([
             'course_key' => 'required|string|max:255',
             'course_name' => 'required|string|max:255',
             'robotics_kit_id' => 'required|exists:robotics_kits,id',
+            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048', 
         ]);
 
+        // Procesar la imagen
+        if ($request->hasFile('image')) {
+            $archivo = $request->file('image');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
+
+            // Mover al directorio public/courses
+            $archivo->move(public_path('courses_files'), $nombreArchivo);
+
+            // Guardar solo el nombre o la ruta relativa
+            $rutaImagen = 'courses/' . $nombreArchivo;
+        } else {
+            $rutaImagen = null;
+        }
+
+        // Crear el registro
         $course = new Course();
         $course->course_key = $request->input('course_key');
         $course->course_name = $request->input('course_name');
         $course->robotics_kit_id = $request->input('robotics_kit_id');
+        $course->image = $rutaImagen;
         $course->save();
 
         return redirect()->route('courses.index')->with('success', 'Course created successfully.');
@@ -77,14 +95,25 @@ class CourseController extends Controller
             'course_key' => 'required|string|max:255',
             'course_name' => 'required|string|max:255',
             'robotics_kit_id' => 'required|exists:robotics_kits,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $course = Course::findOrFail($id);
-        $course->update([
+
+        $data = [
             'course_key' => $request->course_key,
             'course_name' => $request->course_name,
-            'robotics_kit_id' => $request->robotics_kit_id
-        ]);
+            'robotics_kit_id' => $request->robotics_kit_id,
+        ];
+
+        if ($request->hasFile('image')) {
+            $archivo = $request->file('image');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
+            $archivo->move(public_path('courses'), $nombreArchivo);
+            $data['image'] = 'courses/' . $nombreArchivo;
+        }
+
+        $course->update($data);
 
         return redirect()->route('courses.show', $course->id);
     }

@@ -33,9 +33,28 @@ class RoboticsKitController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
+        $archivo = $request->file('image');
+
+        $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
+
+        $ruta = $archivo->move(public_path('robotics_kit'), $nombreArchivo);
+
+        RoboticsKit::create([
+            'name' => $request->name,
+            'image' => 'robotics_kit' . '/' . $nombreArchivo
+            
+        ]);
+
+        /*$kit->update([
+            'image' => 'robotics_kit' . '/' . $nombreArchivo
+        ]);*/
+
+        return redirect()->route('robotics.index')->with('success', 'Robotics Kit created successfully.');
+
+        /*dd($request->all());
         $request->validate([
             'name' => 'required|string|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $kit = new RoboticsKit();
@@ -43,7 +62,7 @@ class RoboticsKitController extends Controller
         $kit->save();
 
         return redirect()->route('robotics.index')->with('success', 'Robotics Kit created successfully.');
-    
+    */
         }
 
     /**

@@ -16,6 +16,9 @@
                 <td>{{ $kit->id }}</td>
                 <td>{{ $kit->name }}</td>
                 <td>
+                    <img src="{{ $kit->image }}" />
+                </td>
+                <td>
                     <a href="{{ route('robotics.show', $kit->id) }}">View</a>
             </tr>
         @endforeach

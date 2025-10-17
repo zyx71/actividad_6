@@ -1,13 +1,16 @@
 <h1>Create a new Course</h1>
 
-<form action="{{ route('courses.store') }}" method="POST">
+<form action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     
     <label>Course Key *</label>
-    <input type="text" name="course_key" required />
+    <input type="text" name="course_key" required>
     
     <label>Course Name *</label>
-    <input type="text" name="course_name" required />
+    <input type="text" name="course_name" required>
+
+    <label>Image *</label>
+    <input type="file" name="image" required>
     
     <label>Robotics Kit *</label>
     <select name="robotics_kit_id" required>
@@ -17,5 +20,5 @@
         @endforeach
     </select>
 
-    <input type="submit" value="Create" />
+    <input type="submit" value="Create">
 </form>

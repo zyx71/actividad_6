@@ -1,6 +1,6 @@
 <h1>Edit {{ $course->course_name }}</h1>
 
-<form action="{{ route('courses.update', $course->id) }}" method="POST">
+<form action="{{ route('courses.update', $course->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PATCH')
     
@@ -16,6 +16,9 @@
             <option value="{{ $kit->id }}" {{ $course->robotics_kit_id == $kit->id ? 'selected' : '' }}>{{ $kit->name }}</option>
         @endforeach
     </select>
+
+    <label>Image (optional)</label>
+    <input type="file" name="image">
 
     <input type="submit" value="Update">
 </form>
